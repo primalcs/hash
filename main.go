@@ -1,7 +1,12 @@
 package main
 
-import "hash"
+import (
+	"log"
+
+	"github.com/primalcs/hash/hash"
+)
 
 func main() {
-	hash.Hash()
+	res := hash.Hash("asdqsda", "asdwqe")
+	log.Println(res)
 }

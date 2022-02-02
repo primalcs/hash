@@ -1,4 +1,4 @@
-package main
+package hash
 
 /*
 #include "hash.h"
