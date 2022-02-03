@@ -52,7 +52,8 @@ int Hash(
 
 
 int GoHash(const char* in1, const char* in2, char* out) {
-	return starkware::Hash(reinterpret_cast<const gsl::byte *>(in1), 
+	return starkware::Hash(
+	reinterpret_cast<const gsl::byte *>(in1),
 	reinterpret_cast<const gsl::byte *>(in2), 
 	reinterpret_cast<gsl::byte *>(out));
 }

@@ -1,6 +1,7 @@
 package hash
 
 /*
+#include <stdlib.h>
 #include "hash.h"
 */
 import "C"
@@ -27,26 +28,27 @@ func Hash(input1, input2 string) string {
 	in2 := C.CBytes(input2_dec)
 	var o [1024]byte
 	out := C.CBytes(o[:])
-
+	upIn1 := unsafe.Pointer(in1)
+	upIn2 := unsafe.Pointer(in2)
+	upOut := unsafe.Pointer(out)
 	res := C.CHash(
-		(*C.char)(unsafe.Pointer(in1)),
-		(*C.char)(unsafe.Pointer(in2)),
-		(*C.char)(unsafe.Pointer(out)))
+		(*C.char)(upIn1),
+		(*C.char)(upIn2),
+		(*C.char)(upOut))
 
+	defer func() {
+		C.free(upIn1)
+		C.free(upIn2)
+		C.free(upOut)
+	}()
 	if res != 0 {
 		fmt.Printf("Pedersen hash encountered an error: %s\n", C.GoBytes(unsafe.Pointer(out), 1024))
-		//C.free(unsafe.Pointer(in1))
-		//C.free(unsafe.Pointer(in2))
-		//C.free(unsafe.Pointer(out))
+
 		return ""
 	}
 
 	hash_result := "0x" + reverseHexEndianRepresentation(
 		hex.EncodeToString(C.GoBytes(unsafe.Pointer(out), 32)))
-
-	//C.free(unsafe.Pointer(in1))
-	//C.free(unsafe.Pointer(in2))
-	//C.free(unsafe.Pointer(out))
 
 	return hash_result
 }
